@@ -1,2 +1,0 @@
-# laravel-deploy
-Laravel deploy
