@@ -1,6 +1,6 @@
 FROM alpine:latest
 
-MAINTAINER MJA <mja.ise.1981@gmail.com>
+MAINTAINER MJA <@gmail.com>
 
 RUN apk update \
 	&& apk upgrade \
