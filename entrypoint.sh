@@ -3,9 +3,9 @@
 
 SSH_USER=$1
 SSH_HOST=$2
-SSH_PORT=$3
+SSH_PORT=${3:-22}
 PATH_SOURCE=$4
-OWNER=$5
+OWNER=${5:-www-data}
 COMMANDS=$6
 
 mkdir -p /root/.ssh
