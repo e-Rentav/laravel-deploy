@@ -7,31 +7,36 @@ branding:
     color: 'green'
 
 inputs:
-    user: 
+    remote-user: 
         description: 'Deploy user'
         required: true
-    host: 
+    remote-host: 
         description: 'Deploy host'
         required: true
-    port: 
-        description: 'Deploy port'
-        required: false
-    path: 
+    ssh-private-key: 
+        description: 'SSH Private Key'
+        required: true
+    target-directory: 
         description: 'Path source on server'
         required: true
+    ssh-port: 
+        description: 'Deploy port'
+        required: false
     owner: 
         description: 'Deploy owner'
-        required: true
+        required: false
     commands: 
         description: 'Command to run after default artisan commands'
         required: false
+
 runs:
     using: 'docker'
     image: 'Dockerfile'
     args:
-        -   ${{ inputs.user }}
-        -   ${{ inputs.host }}
-        -   ${{ inputs.port }}
-        -   ${{ inputs.path }}
-        -   ${{ inputs.owner }}
-        -   ${{ inputs.commands }}
+        - ${{ inputs.remote-user }}
+        - ${{ inputs.remote-host }}
+        - ${{ inputs.ssh-private-key }}
+        - ${{ inputs.target-directory }}
+        - ${{ inputs.ssh-port }}
+        - ${{ inputs.owner }}
+        - ${{ inputs.commands }}
