@@ -1,7 +1,5 @@
 FROM alpine:latest
 
-MAINTAINER MJA <@gmail.com>
-
 RUN apk update \
 	&& apk upgrade \
 	&& apk add --no-cache rsync openssh-client \
@@ -9,9 +7,9 @@ RUN apk update \
 
 COPY entrypoint.sh /script/entrypoint.sh
 
+RUN chmod +x /script/entrypoint.sh
+
 WORKDIR /workspace
 
 ENTRYPOINT ["/bin/sh", "/script/entrypoint.sh"]
-
-CMD ["deploy"]
 
