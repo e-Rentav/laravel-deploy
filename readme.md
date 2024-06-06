@@ -7,12 +7,12 @@ Deploy Laravel Application to Server via SSH by RSync
 ## Default Artisan Commands
 ```
 php artisan cache:clear
-php artisan config:clear 
-php artisan route:clear 
-php artisan view:clear 
-php artisan config:cache 
-php artisan route:cache 
-php artisan view:cache 
+php artisan config:clear
+php artisan route:clear
+php artisan view:clear
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
 composer dump-autoload
 ```
 All commands above are executed in the default order.
