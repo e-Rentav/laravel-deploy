@@ -1,0 +1,37 @@
+name: 'Laravel Auto Deploy'
+
+description: 'Deploy Laravel Application to Server via SSH by RSync'
+author: 'karson'
+branding:
+    icon: 'send'
+    color: 'green'
+
+inputs:
+    user: 
+        description: 'Deploy user'
+        required: true
+    host: 
+        description: 'Deploy host'
+        required: true
+    port: 
+        description: 'Deploy port'
+        required: false
+    path: 
+        description: 'Path source on server'
+        required: true
+    owner: 
+        description: 'Deploy owner'
+        required: true
+    commands: 
+        description: 'Command to run after default artisan commands'
+        required: false
+runs:
+    using: 'docker'
+    image: 'Dockerfile'
+    args:
+        -   ${{ inputs.user }}
+        -   ${{ inputs.host }}
+        -   ${{ inputs.port }}
+        -   ${{ inputs.path }}
+        -   ${{ inputs.owner }}
+        -   ${{ inputs.commands }}
