@@ -1,22 +1,22 @@
 
 #!/bin/bash
-
-SSH_USER=$1
-SSH_HOST=$2
-SSH_PORT=${3:-22}
-PATH_SOURCE=$4
+REMOTE_USER=$1
+REMOTE_HOST=$2
+SSH_PRIVATE_KEY=$3
+TARGET_DIRECTORY=$4
+SSH_PORT=${5:-22}
 OWNER=${5:-www-data}
 COMMANDS=$6
 
 mkdir -p /root/.ssh
-ssh-keyscan -H "$SSH_HOST" >> /root/.ssh/known_hosts
+ssh-keyscan -H "$REMOTE_HOST" >> /root/.ssh/known_hosts
 
-if [ -z "$DEPLOY_KEY" ];
+if [ -z "$SSH_PRIVATE_KEY" ];
 then
 	echo $'\n' "------ DEPLOY KEY NOT SET YET! ----------------" $'\n'
 	exit 1
 else
-	printf '%b\n' "$DEPLOY_KEY" > /root/.ssh/id_rsa
+	printf '%b\n' "$SSH_PRIVATE_KEY" > /root/.ssh/id_rsa
 	chmod 400 /root/.ssh/id_rsa
 
 	echo $'\n' "------ CONFIG SUCCESSFUL! ---------------------" $'\n'
@@ -24,8 +24,8 @@ fi
 
 if [ ! -z "$SSH_PORT" ];
 then
-  printf "Host %b\n\tPort %b\n" "$SSH_HOST" "$SSH_PORT" > /root/.ssh/config
-	ssh-keyscan -p $SSH_PORT -H "$SSH_HOST" >> /root/.ssh/known_hosts
+  printf "Host %b\n\tPort %b\n" "$REMOTE_HOST" "$SSH_PORT" > /root/.ssh/config
+	ssh-keyscan -p $SSH_PORT -H "$REMOTE_HOST" >> /root/.ssh/known_hosts
 fi
 
 rsync --progress -avzh \
@@ -38,20 +38,20 @@ rsync --progress -avzh \
 	--exclude='readme.md' \
 	--exclude='README.md' \
 	-e "ssh -i /root/.ssh/id_rsa" \
-	. $SSH_USER@$SSH_HOST:$PATH_SOURCE
+	. $REMOTE_USER@$REMOTE_HOST:$TARGET_DIRECTORY
 
 if [ $? -eq 0 ]
 then
 	echo $'\n' "------ SYNC SUCCESSFUL! -----------------------" $'\n'
 	echo $'\n' "------ RELOADING PERMISSION -------------------" $'\n'
 
-	ssh -i /root/.ssh/id_rsa -t $SSH_USER@$SSH_HOST "sudo chown -R $OWNER:$OWNER $PATH_SOURCE"
-	ssh -i /root/.ssh/id_rsa -t $SSH_USER@$SSH_HOST "sudo chmod 775 -R $PATH_SOURCE"
-	ssh -i /root/.ssh/id_rsa -t $SSH_USER@$SSH_HOST "sudo chmod 777 -R $PATH_SOURCE/storage"
-	ssh -i /root/.ssh/id_rsa -t $SSH_USER@$SSH_HOST "sudo chmod 777 -R $PATH_SOURCE/public"
-	ssh -i /root/.ssh/id_rsa -t $SSH_USER@$SSH_HOST "cd $PATH_SOURCE && php artisan cache:clear && php artisan route:cache && php artisan config:cache"
-	ssh -i /root/.ssh/id_rsa -t $SSH_USER@$SSH_HOST "
-	    cd $PATH_SOURCE &&
+	ssh -i /root/.ssh/id_rsa -t $REMOTE_USER@$REMOTE_HOST "sudo chown -R $OWNER:$OWNER $TARGET_DIRECTORY"
+	ssh -i /root/.ssh/id_rsa -t $REMOTE_USER@$REMOTE_HOST "sudo chmod 775 -R $TARGET_DIRECTORY"
+	ssh -i /root/.ssh/id_rsa -t $REMOTE_USER@$REMOTE_HOST "sudo chmod 777 -R $TARGET_DIRECTORY/storage"
+	ssh -i /root/.ssh/id_rsa -t $REMOTE_USER@$REMOTE_HOST "sudo chmod 777 -R $TARGET_DIRECTORY/public"
+	ssh -i /root/.ssh/id_rsa -t $REMOTE_USER@$REMOTE_HOST "cd $TARGET_DIRECTORY && php artisan cache:clear && php artisan route:cache && php artisan config:cache"
+	ssh -i /root/.ssh/id_rsa -t $REMOTE_USER@$REMOTE_HOST "
+	    cd $TARGET_DIRECTORY &&
 	    php artisan cache:clear &&
 	    php artisan config:clear &&
 	    php artisan route:clear &&
@@ -63,7 +63,7 @@ then
 	"
 	if [ ! -z "$COMMANDS" ];
 	then
-		ssh -i /root/.ssh/id_rsa -t $SSH_USER@$SSH_HOST "cd $PATH_SOURCE && $COMMANDS"
+		ssh -i /root/.ssh/id_rsa -t $REMOTE_USER@$REMOTE_HOST "cd $TARGET_DIRECTORY && $COMMANDS"
 	fi
 
 	echo $'\n' "------ CONGRATS! DEPLOY SUCCESSFUL!!! ---------" $'\n'
