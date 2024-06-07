@@ -43,13 +43,12 @@ rsync --progress -avzh \
 if [ $? -eq 0 ]
 then
 	echo $'\n' "------ SYNC SUCCESSFUL! -----------------------" $'\n'
-	echo $'\n' "------ RELOADING PERMISSION -------------------" $'\n'
+	# echo $'\n' "------ RELOADING PERMISSION -------------------" $'\n'
 
-	ssh -i /root/.ssh/id_rsa -t $REMOTE_USER@$REMOTE_HOST "sudo chown -R $OWNER:$OWNER $TARGET_DIRECTORY"
-	ssh -i /root/.ssh/id_rsa -t $REMOTE_USER@$REMOTE_HOST "sudo chmod 775 -R $TARGET_DIRECTORY"
-	ssh -i /root/.ssh/id_rsa -t $REMOTE_USER@$REMOTE_HOST "sudo chmod 777 -R $TARGET_DIRECTORY/storage"
-	ssh -i /root/.ssh/id_rsa -t $REMOTE_USER@$REMOTE_HOST "sudo chmod 777 -R $TARGET_DIRECTORY/public"
-	ssh -i /root/.ssh/id_rsa -t $REMOTE_USER@$REMOTE_HOST "cd $TARGET_DIRECTORY && php artisan cache:clear && php artisan route:cache && php artisan config:cache"
+	# ssh -i /root/.ssh/id_rsa -t $REMOTE_USER@$REMOTE_HOST "sudo chown -R $OWNER:$OWNER $TARGET_DIRECTORY"
+	# ssh -i /root/.ssh/id_rsa -t $REMOTE_USER@$REMOTE_HOST "sudo chmod 775 -R $TARGET_DIRECTORY"
+	# ssh -i /root/.ssh/id_rsa -t $REMOTE_USER@$REMOTE_HOST "sudo chmod 777 -R $TARGET_DIRECTORY/storage"
+	# ssh -i /root/.ssh/id_rsa -t $REMOTE_USER@$REMOTE_HOST "sudo chmod 777 -R $TARGET_DIRECTORY/public"
 	ssh -i /root/.ssh/id_rsa -t $REMOTE_USER@$REMOTE_HOST "
 	    cd $TARGET_DIRECTORY &&
 	    php artisan cache:clear &&
